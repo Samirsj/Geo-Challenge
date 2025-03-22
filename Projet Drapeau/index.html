@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Géo Challenge - Jeu de Reconnaissance des Pays</title>
     
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
@@ -14,17 +17,21 @@
 <body>
     <div class="container">
         <header>
-            <h1>Géo Challenge</h1>
+            <h1>🌍 Géo Challenge</h1>
             <div class="game-info">
-                <div class="score">Score: <span id="score">0</span></div>
-                <div class="timer">Temps: <span id="timer">00:00</span></div>
+                <div class="score">Score: <span id="score">0</span> pts</div>
+                <div class="timer">⏱️ <span id="timer">00:00</span></div>
             </div>
         </header>
 
         <main>
             <div id="map"></div>
             <div class="game-controls">
-                <input type="text" id="countryInput" placeholder="Entrez le nom du pays...">
+                <input type="text" 
+                       id="countryInput" 
+                       placeholder="Entrez le nom du pays..."
+                       autocomplete="off"
+                       spellcheck="false">
                 <button id="submitAnswer">Valider</button>
             </div>
             <div id="feedback" class="feedback"></div>

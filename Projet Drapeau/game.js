@@ -9,9 +9,10 @@ let gameTime = 0;
 // Initialisation de la carte
 function initMap() {
     map = L.map('map').setView([48.866667, 2.333333], 4);
-    L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
-        maxZoom: 20,
-        attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 20
     }).addTo(map);
 
     // Désactiver le zoom et le déplacement pour éviter la triche
@@ -34,9 +35,23 @@ function selectRandomCountry() {
         map.removeLayer(currentMarker);
     }
     
-    // Ajout du nouveau marqueur
-    currentMarker = L.marker(currentCountry.coordinates).addTo(map);
-    map.setView(currentCountry.coordinates, 4);
+    // Création d'une icône personnalisée
+    const customIcon = L.divIcon({
+        className: 'custom-marker',
+        html: '📍',
+        iconSize: [30, 30],
+        iconAnchor: [15, 30]
+    });
+    
+    // Ajout du nouveau marqueur avec animation
+    currentMarker = L.marker(currentCountry.coordinates, {
+        icon: customIcon
+    }).addTo(map);
+    
+    map.setView(currentCountry.coordinates, 4, {
+        animate: true,
+        duration: 1
+    });
 }
 
 // Vérification de la réponse
@@ -50,26 +65,32 @@ function checkAnswer(userAnswer) {
     return correctAnswers.includes(normalizedUserAnswer);
 }
 
-// Mise à jour du score
+// Mise à jour du score avec animation
 function updateScore(correct) {
     if (correct) {
         score += 100;
-        document.getElementById('score').textContent = score;
+        const scoreElement = document.getElementById('score');
+        scoreElement.textContent = score;
+        scoreElement.parentElement.classList.add('score-update');
+        setTimeout(() => {
+            scoreElement.parentElement.classList.remove('score-update');
+        }, 500);
         showFeedback(true);
     } else {
         showFeedback(false);
     }
 }
 
-// Affichage du feedback
+// Affichage du feedback avec animation
 function showFeedback(correct) {
     const feedback = document.getElementById('feedback');
-    feedback.textContent = correct ? 'Correct ! 🎉' : `Incorrect. C'était ${currentCountry.name} 😕`;
-    feedback.className = `feedback ${correct ? 'correct' : 'incorrect'}`;
+    feedback.textContent = correct ? 
+        '🎉 Correct ! Bien joué !' : 
+        `❌ Incorrect. C'était ${currentCountry.name}`;
+    feedback.className = `feedback ${correct ? 'correct' : 'incorrect'} visible`;
     
     // Effacer le feedback après 2 secondes
     setTimeout(() => {
-        feedback.textContent = '';
         feedback.className = 'feedback';
     }, 2000);
 }
@@ -91,24 +112,32 @@ function initGame() {
     // Démarrage du chronomètre
     timerInterval = setInterval(updateTimer, 1000);
     
+    // Focus sur l'input au démarrage
+    document.getElementById('countryInput').focus();
+    
     // Gestionnaire de soumission de réponse
-    document.getElementById('submitAnswer').addEventListener('click', () => {
-        const userAnswer = document.getElementById('countryInput').value;
-        const correct = checkAnswer(userAnswer);
-        
-        updateScore(correct);
-        document.getElementById('countryInput').value = '';
-        
-        // Sélection d'un nouveau pays après un court délai
-        setTimeout(selectRandomCountry, 1500);
-    });
+    document.getElementById('submitAnswer').addEventListener('click', handleAnswer);
     
     // Permettre la validation avec la touche Entrée
     document.getElementById('countryInput').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
-            document.getElementById('submitAnswer').click();
+            handleAnswer();
         }
     });
+}
+
+// Gestion de la réponse
+function handleAnswer() {
+    const input = document.getElementById('countryInput');
+    const userAnswer = input.value;
+    const correct = checkAnswer(userAnswer);
+    
+    updateScore(correct);
+    input.value = '';
+    input.focus();
+    
+    // Sélection d'un nouveau pays après un court délai
+    setTimeout(selectRandomCountry, 1500);
 }
 
 // Démarrage du jeu quand la page est chargée

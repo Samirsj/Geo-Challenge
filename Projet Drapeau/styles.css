@@ -1,103 +1,170 @@
+:root {
+    --primary-color: #4CAF50;
+    --error-color: #f44336;
+    --success-color: #4CAF50;
+    --background-color: #1a1a2e;
+    --card-color: #16213e;
+    --text-color: #ffffff;
+    --border-radius: 15px;
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f0f2f5;
-    color: #333;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    padding: 20px;
 }
 
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 header {
     text-align: center;
-    margin-bottom: 20px;
+    padding: 20px;
+    background-color: var(--card-color);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-    color: #2c3e50;
-    margin-bottom: 15px;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    color: var(--text-color);
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
 .game-info {
     display: flex;
     justify-content: center;
     gap: 20px;
-    margin-bottom: 20px;
-    font-size: 1.2em;
+    flex-wrap: wrap;
 }
 
 .score, .timer {
-    background-color: #fff;
-    padding: 10px 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 15px 30px;
+    border-radius: var(--border-radius);
+    font-size: 1.2em;
+    min-width: 200px;
+    text-align: center;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 #map {
     height: 500px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    border: 2px solid var(--card-color);
+    margin: 20px 0;
 }
 
 .game-controls {
     display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
+    gap: 15px;
+    margin: 20px 0;
+    flex-wrap: wrap;
 }
 
 #countryInput {
     flex: 1;
-    padding: 12px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    font-size: 1em;
+    min-width: 250px;
+    padding: 15px 25px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius);
+    font-size: 1.1em;
+    background-color: var(--card-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+#countryInput:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
 }
 
 #submitAnswer {
-    padding: 12px 24px;
-    background-color: #3498db;
+    padding: 15px 40px;
+    background-color: var(--primary-color);
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--border-radius);
     cursor: pointer;
-    font-size: 1em;
-    transition: background-color 0.3s;
+    font-size: 1.1em;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 #submitAnswer:hover {
-    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+#submitAnswer:active {
+    transform: translateY(0);
 }
 
 .feedback {
     text-align: center;
-    margin-top: 15px;
-    padding: 10px;
-    border-radius: 8px;
-    font-weight: bold;
+    margin: 20px 0;
+    padding: 15px;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    font-size: 1.2em;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.feedback.visible {
+    opacity: 1;
 }
 
 .feedback.correct {
-    background-color: #2ecc71;
+    background-color: var(--success-color);
     color: white;
 }
 
 .feedback.incorrect {
-    background-color: #e74c3c;
+    background-color: var(--error-color);
     color: white;
 }
 
+/* Animation pour le score */
+@keyframes scoreUpdate {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.score-update {
+    animation: scoreUpdate 0.5s ease;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
     .container {
         padding: 10px;
+    }
+    
+    h1 {
+        font-size: 2em;
     }
     
     #map {
@@ -110,5 +177,10 @@ h1 {
     
     #submitAnswer {
         width: 100%;
+    }
+    
+    .score, .timer {
+        min-width: 150px;
+        font-size: 1em;
     }
 } 
